@@ -1,0 +1,18 @@
+---
+- name: Install and Configure Nginx # Descriptive name for the playbook's purpose.
+  hosts: web                     # Target the 'web' group in the inventory file.
+  become: yes                    # Use sudo privileges for all tasks in this playbook.
+  tasks:                         # Define a list of tasks to execute.
+    - name: Update apt cache     # Task to refresh the package cache.
+      apt:
+        update_cache: yes        # Ensures the latest package information is available.
+
+    - name: Install Nginx        # Task to install the Nginx web server.
+      apt:
+        name: nginx              # Specifies the package name (Nginx).
+        state: present           # Ensures the package is installed.
+
+    - name: Start Nginx Service  # Task to start the Nginx service.
+      service:
+        name: nginx              # The name of the service (Nginx).
+        state: started           # Ensures the service is running.
