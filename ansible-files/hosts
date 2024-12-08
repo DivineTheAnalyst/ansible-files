@@ -1,0 +1,3 @@
+[web]
+54.85.5.102 ansible_user=ubuntu ansible_private_key_file=~/.ssh/the-main.pem
+
