@@ -1,0 +1,9 @@
+---
+- name: Stop Application Service
+  hosts: web
+  become: yes
+  tasks:
+    - name: Stop the service
+      service:
+        name: apache2  # Replace with your application's service name
+        state: stopped
