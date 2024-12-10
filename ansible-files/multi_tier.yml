@@ -13,16 +13,16 @@
         name: nginx
         state: started
 
-- name: Install MySQL on DB Servers
-  hosts: db
+- name: Install Apache Web Server
+  hosts: web2
   become: yes
   tasks:
-    - name: Install MySQL Server
+    - name: Install Apache
       apt:
-        name: mysql-server
+        name: apache2
         state: present
 
-    - name: Start MySQL Service
+    - name: Start Apache Service
       service:
-        name: mysql
+        name: apache2
         state: started
