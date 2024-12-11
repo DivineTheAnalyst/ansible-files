@@ -16,11 +16,6 @@
         name: nginx                          # Service name (Nginx)
         state: started                       # Ensure the service is running
 
-    - name: Deploy Web Application           # Task to deploy a sample web application
-      copy:                                  # Use the copy module to transfer files
-        src: /path/to/web_app/index.html     # Local path to the application file
-        dest: /var/www/html/index.html       # Target path on the web server
-
 # Database Server Configuration
 - name: Configure Database Servers           # Name of the play for database server setup
   hosts: db                                  # Target the 'db' group from the inventory file
