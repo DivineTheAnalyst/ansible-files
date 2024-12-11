@@ -15,7 +15,7 @@
       service:                               # Use the service module to manage services
         name: nginx                          # Service name (Nginx)
         state: started                       # Ensure the service is running
-
+---
 # Database Server Configuration
 - name: Configure Database Servers           # Name of the play for database server setup
   hosts: db                                  # Target the 'db' group from the inventory file
