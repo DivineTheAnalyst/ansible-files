@@ -1,9 +1,9 @@
 ---
-- name: Stop Application Service
-  hosts: web
-  become: yes
-  tasks:
-    - name: Stop the service
-      service:
-        name: apache2  # Replace with your application's service name
-        state: stopped
+- name: Stop Application Service      # Descriptive name for the playbook's purpose.
+  hosts: web                          # Target the 'web' group in the inventory file.
+  become: yes                         # Use sudo privileges for all tasks in this playbook.
+  tasks:                              # Defines the list of tasks to perform.
+    - name: Stop the service          # Task to stop a specific application service.
+      service:                        # Uses the 'service' module to manage the service.
+        name: apache2                 # Specifies the name of the service to stop (replace as needed).
+        state: stopped                # Ensures the service is stopped.
