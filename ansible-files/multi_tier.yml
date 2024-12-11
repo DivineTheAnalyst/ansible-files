@@ -1,9 +1,9 @@
 ---
-- name: Multi-Tier Deployment
+- name: Configure Web Servers
   hosts: web
   become: yes
   tasks:
-    - name: Install Nginx on Web Servers
+    - name: Install Nginx
       apt:
         name: nginx
         state: present
@@ -13,16 +13,33 @@
         name: nginx
         state: started
 
-- name: Install Apache Web Server
-  hosts: web2
+    - name: Deploy Web Application
+      copy:
+        src: /path/to/web_app/index.html
+        dest: /var/www/html/index.html
+
+- name: Configure Database Servers
+  hosts: db
   become: yes
   tasks:
-    - name: Install Apache
+    - name: Install MySQL Server
       apt:
-        name: apache2
+        name: mysql-server
         state: present
 
-    - name: Start Apache Service
+    - name: Start MySQL Service
       service:
-        name: apache2
+        name: mysql
         state: started
+
+    - name: Create Database
+      mysql_db:
+        name: my_app_db
+        state: present
+
+    - name: Create Database User
+      mysql_user:
+        name: my_app_user
+        password: securepassword
+        priv: "my_app_db.*:ALL"
+        state: present
