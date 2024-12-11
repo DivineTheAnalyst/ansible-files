@@ -1,45 +1,49 @@
 ---
-- name: Configure Web Servers
-  hosts: web
-  become: yes
-  tasks:
-    - name: Install Nginx
-      apt:
-        name: nginx
-        state: present
+# Playbook to configure web and database servers for a multi-tier deployment
 
-    - name: Start Nginx Service
-      service:
-        name: nginx
-        state: started
+# Web Server Configuration
+- name: Configure Web Servers                # Name of the play for web server setup
+  hosts: web                                 # Target the 'web' group from the inventory file
+  become: yes                                # Execute tasks with sudo privileges
+  tasks:                                     # Define tasks to be executed
+    - name: Install Nginx                    # Task to install the Nginx web server
+      apt:                                   # Use the apt module to manage packages
+        name: nginx                          # Specify the package name (Nginx)
+        state: present                       # Ensure Nginx is installed
 
-    - name: Deploy Web Application
-      copy:
-        src: /path/to/web_app/index.html
-        dest: /var/www/html/index.html
+    - name: Start Nginx Service              # Task to start the Nginx service
+      service:                               # Use the service module to manage services
+        name: nginx                          # Service name (Nginx)
+        state: started                       # Ensure the service is running
 
-- name: Configure Database Servers
-  hosts: db
-  become: yes
-  tasks:
-    - name: Install MySQL Server
-      apt:
-        name: mysql-server
-        state: present
+    - name: Deploy Web Application           # Task to deploy a sample web application
+      copy:                                  # Use the copy module to transfer files
+        src: /path/to/web_app/index.html     # Local path to the application file
+        dest: /var/www/html/index.html       # Target path on the web server
 
-    - name: Start MySQL Service
-      service:
-        name: mysql
-        state: started
+# Database Server Configuration
+- name: Configure Database Servers           # Name of the play for database server setup
+  hosts: db                                  # Target the 'db' group from the inventory file
+  become: yes                                # Execute tasks with sudo privileges
+  tasks:                                     # Define tasks to be executed
+    - name: Install MySQL Server             # Task to install the MySQL server
+      apt:                                   # Use the apt module to manage packages
+        name: mysql-server                   # Specify the package name (MySQL server)
+        state: present                       # Ensure MySQL server is installed
 
-    - name: Create Database
-      mysql_db:
-        name: my_app_db
-        state: present
+    - name: Start MySQL Service              # Task to start the MySQL service
+      service:                               # Use the service module to manage services
+        name: mysql                          # Service name (MySQL)
+        state: started                       # Ensure the service is running
 
-    - name: Create Database User
-      mysql_user:
-        name: my_app_user
-        password: securepassword
-        priv: "my_app_db.*:ALL"
-        state: present
+    - name: Create Database                  # Task to create a database
+      mysql_db:                              # Use the mysql_db module for database management
+        name: my_app_db                      # Name of the database to be created
+        state: present                       # Ensure the database exists
+
+    - name: Create Database User             # Task to create a database user
+      mysql_user:                            # Use the mysql_user module for user management
+        name: my_app_user                    # Name of the database user
+        password: securepassword             # Password for the database user
+        priv: "my_app_db.*:ALL"              # Grant all privileges on 'my_app_db' to the user
+        state: present                       # Ensure the user exists
