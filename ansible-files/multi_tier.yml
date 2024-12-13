@@ -16,29 +16,34 @@
         name: nginx                          # Service name (Nginx)
         state: started                       # Ensure the service is running
 
-# Database Server Configuration
-- name: Configure Database Servers           # Name of the play for database server setup
-  hosts: db                                  # Target the 'db' group from the inventory file
-  become: yes                                # Execute tasks with sudo privileges
-  tasks:                                     # Define tasks to be executed
-    - name: Install MySQL Server             # Task to install the MySQL server
-      apt:                                   # Use the apt module to manage packages
-        name: mysql-server                   # Specify the package name (MySQL server)
-        state: present                       # Ensure MySQL server is installed
+# Redis Server Configuration
+- name: Configure Redis Servers          # Define a play to set up Redis servers
+  hosts: redis                           # Target the 'redis' group from the inventory file
+  become: yes                            # Run tasks with elevated privileges (sudo)
+  tasks:                                 # List of tasks to execute
+    - name: Add Redis APT repository     # Add the official Redis repository to the APT sources
+      apt_repository:                    # Use the apt_repository module for managing APT sources
+        repo: "ppa:redislabs/redis"      # Specify the PPA (Personal Package Archive) for Redis
+        state: present                   # Ensure the repository is added
 
-    - name: Start MySQL Service              # Task to start the MySQL service
-      service:                               # Use the service module to manage services
-        name: mysql                          # Service name (MySQL)
-        state: started                       # Ensure the service is running
+    - name: Update APT cache             # Refresh the local APT cache to reflect the added repository
+      apt:                               # Use the apt module for APT operations
+        update_cache: yes                # Update the package index
+        cache_valid_time: 3600           # Cache validity duration (in seconds)
 
-    - name: Create Database                  # Task to create a database
-      mysql_db:                              # Use the mysql_db module for database management
-        name: my_app_db                      # Name of the database to be created
-        state: present                       # Ensure the database exists
+    - name: Install Redis                # Install the Redis server package
+      apt:                               # Use the apt module to install Redis
+        name: redis-server               # Specify the Redis server package
+        state: present                   # Ensure Redis is installed
 
-    - name: Create Database User             # Task to create a database user
-      mysql_user:                            # Use the mysql_user module for user management
-        name: my_app_user                    # Name of the database user
-        password: securepassword             # Password for the database user
-        priv: "my_app_db.*:ALL"              # Grant all privileges on 'my_app_db' to the user
-        state: present                       # Ensure the user exists
+    - name: Configure Redis to allow remote connections  # Modify Redis configuration for remote access
+      lineinfile:                        # Use the lineinfile module to modify configuration files
+        path: /etc/redis/redis.conf      # Specify the Redis configuration file
+        regexp: '^bind '                 # Target the 'bind' directive for modification
+        line: 'bind 0.0.0.0'             # Allow Redis to listen on all network interfaces
+        state: present                   # Ensure the line exists in the file
+
+    - name: Restart Redis service        # Restart Redis to apply configuration changes
+      service:                           # Use the service module for service management
+        name: redis-server               # Specify the Redis service name
+        state: restarted                 # Restart the service
