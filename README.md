@@ -1,6 +1,6 @@
 # Ansible Playbooks Repository
 
-Welcome to the **Kavetec Ansible** repository! This repository contains Ansible playbooks and related configurations to automate various IT tasks and deployments.
+Welcome to **Ijeawele's Ansible** repository! This repository contains Ansible playbooks and related configurations to automate various IT tasks and deployments.
 
 ## 📌 Repository Overview
 
